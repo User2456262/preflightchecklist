@@ -4,24 +4,236 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pilot Pre-Flight Walk Around</title>
+  <!-- Load Google Font "Roboto" -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    /* Global & Reset Styles */
+    /* ========= CSS Variables & Global Resets ========= */
+    :root {
+      --primary-bg: #121212;
+      --secondary-bg: #1e1e1e;
+      --accent: #0088cc;
+      --light-gray: #ccc;
+      --dark-gray: #333;
+      --btn-bg: rgba(50,50,50,0.8);
+      --btn-hover: rgba(50,50,50,1);
+      --topbar-bg: rgba(80,80,80,0.85);
+      --panel-bg: rgba(0,0,0,0.85);
+      --transition-speed: 0.3s;
+    }
+    
+    /* ========= Light Theme Overrides ========= */
+    /* In light mode, override the variables and some fixed colors */
+    body.light-theme {
+      --primary-bg: #f9f9f9;
+      --secondary-bg: #fff;
+      --accent: #0088cc;
+      --light-gray: #000; /* Use black text for light mode */
+      --dark-gray: #666;
+      --btn-bg: rgba(200,200,200,0.8);
+      --btn-hover: rgba(200,200,200,1);
+      --topbar-bg: rgba(240,240,240,0.85);
+      --panel-bg: rgba(255,255,255,0.85);
+      color: #000;
+    }
+    
+    /* Extra light-mode overrides for headers and panels */
+    body.light-theme .settings-content h2,
+    body.light-theme .review-panel h2 {
+      color: #000;
+    }
+    body.light-theme .review-panel {
+      background: rgba(255,255,255,0.9);
+    }
+    
+    /* Force text color for buttons and search inputs in light mode */
+    body.light-theme .button,
+    body.light-theme .search-box {
+      color: #000;
+    }
+    
+    /* Also override modal text for light mode */
+    body.light-theme .modal-header h2,
+    body.light-theme .modal-content li {
+      color: #000;
+    }
+    
+    /* NEW RULE: Override the 'Previously Used' button text color in light mode */
+    body.light-theme .previously-used {
+      color: #000;
+    }
+    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
+    
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      background: black;
+      background: var(--primary-bg);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
-
-    /* Video Background */
+    
+    a { text-decoration: none; color: inherit; }
+    
+    /* ========= Button Styling ========= */
+    .button {
+      background: var(--btn-bg);
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background var(--transition-speed), transform 0.2s;
+    }
+    .button:hover {
+      background: var(--btn-hover);
+      transform: translateY(-2px);
+    }
+    
+    /* ========= Home Page ========= */
+    .homepage {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: url('https://source.unsplash.com/featured/?airplane,sky') no-repeat center center/cover;
+    }
+    /* Dark overlay for legibility */
+    .homepage::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1;
+    }
+    /* Home Top Bar */
+    .home-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 15px 30px;
+      background: var(--topbar-bg);
+      backdrop-filter: blur(5px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    /* Home Content Card with Tagline */
+    /* Moved to the center of the screen */
+    .home-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    /* In light mode, use a light background for the box */
+    body.light-theme .home-content {
+      background: rgba(255, 255, 255, 0.8);
+    }
+    .home-content h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .home-content p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: var(--light-gray);
+    }
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: var(--btn-bg);
+      color: #fff;
+      transition: background var(--transition-speed);
+      margin-bottom: 8px;
+    }
+    .search-box::placeholder { color: var(--light-gray); }
+    #search-results {
+      margin-top: 8px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .result-item {
+      padding: 12px 16px;
+      margin: 4px 0;
+      background: var(--secondary-bg);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition-speed), transform 0.2s;
+    }
+    .result-item:hover {
+      background: var(--dark-gray);
+      transform: scale(1.02);
+    }
+    .previously-used {
+      margin-top: 15px;
+      background: var(--btn-bg);
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background var(--transition-speed), transform 0.2s;
+      width: 100%;
+    }
+    .previously-used:hover {
+      background: var(--btn-hover);
+      transform: translateY(-2px);
+    }
+    #prev-dropdown {
+      background: var(--secondary-bg);
+      border-radius: 8px;
+      margin-top: 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+      text-align: left;
+    }
+    .prev-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: background var(--transition-speed);
+      color: #fff;
+    }
+    .prev-item:last-child { border-bottom: none; }
+    .prev-item:hover { background: var(--dark-gray); }
+    
+    /* ========= Checklist Page ========= */
+    .checklist-page {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      z-index: 30;
+    }
+    /* Video Background for Checklist Page */
     #video-background {
       position: fixed;
       top: 0;
@@ -31,153 +243,31 @@
       object-fit: cover;
       z-index: -1;
     }
-
-    /* Top Bar (Home screen) */
-    .top-buttons {
+    /* Top Bar for Checklist Page */
+    .checklist-topbar {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      padding: 10px 20px;
-      background: rgba(80, 80, 80, 0.7);
+      padding: 15px 30px;
+      background: var(--topbar-bg);
       backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      z-index: 50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
-
-    /* Modern Button Styles */
-    .button {
-      background: rgba(50, 50, 50, 0.8);
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .button:hover {
-      background: rgba(50, 50, 50, 1);
-      transform: translateY(-2px);
-    }
-
-    /* Home Button (visible when checklist is active) */
-    #home-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 30;
-      display: none;
-      background: rgba(50, 50, 50, 0.8);
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s, transform 0.2s;
-    }
-    #home-btn:hover {
-      background: rgba(50, 50, 50, 1);
-      transform: translateY(-2px);
-    }
-
-    /* Main UI Container (Search Interface) */
-    .container {
-      position: relative;
-      width: 90%;
-      max-width: 400px;
-      height: 100%;
+    .topbar-left, .topbar-center, .topbar-right { flex: 1; }
+    .topbar-left {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      z-index: 10;
+      align-items: center;
+      gap: 10px;
     }
-
-    /* Bottom Section: Search & Previously Used */
-    .bottom-content {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      text-align: center;
-      z-index: 10;
-    }
-    .search-box {
-      width: 100%;
-      padding: 12px 16px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      outline: none;
-      background: rgba(50, 50, 50, 0.8);
-      color: #fff;
-      transition: background 0.3s;
-    }
-    .search-box::placeholder {
-      color: #ddd;
-    }
-    #search-results {
-      margin-top: 8px;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-    .result-item {
-      padding: 12px 16px;
-      margin: 4px 0;
-      background: rgba(30, 30, 30, 0.9);
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .result-item:hover {
-      background: rgba(50, 50, 50, 0.9);
-    }
-    .previously-used {
-      margin-top: 15px;
-      background: rgba(50, 50, 50, 0.8);
-      color: #fff;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-      width: 100%;
-    }
-    .previously-used:hover {
-      background: rgba(50, 50, 50, 1);
-      transform: translateY(-2px);
-    }
-    #prev-dropdown {
-      background: rgba(30, 30, 30, 0.9);
-      border-radius: 6px;
-      margin-top: 5px;
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      text-align: left;
-    }
-    .prev-item {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      transition: background 0.3s;
-      color: #fff;
-    }
-    .prev-item:last-child {
-      border-bottom: none;
-    }
-    .prev-item:hover {
-      background: rgba(50, 50, 50, 0.9);
-    }
-
-    /* Checklist Panel */
+    .topbar-left h2 { font-size: 20px; margin: 0; }
+    .topbar-center { text-align: center; font-size: 18px; }
+    .topbar-right { text-align: right; }
+    
     .checklist-panel {
       position: fixed;
       bottom: 0;
@@ -186,47 +276,26 @@
       width: 90%;
       max-width: 400px;
       max-height: 60%;
-      background: rgba(0, 0, 0, 0.85);
-      color: #fff;
+      background: var(--panel-bg);
       border-radius: 10px 10px 0 0;
-      z-index: 20;
-      transition: transform 0.3s ease-out;
+      z-index: 40;
+      transition: transform var(--transition-speed) ease-out;
       display: flex;
       flex-direction: column;
     }
-    .checklist-panel.open {
-      transform: translateX(-50%) translateY(0);
-    }
-    /* Revised header with three sections: left (plane name), center (timer), right (Done button) */
-    .checklist-header {
-      padding: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .header-left h2 {
-      font-size: 20px;
-    }
-    .header-center {
-      font-size: 18px;
-      color: #fff;
-    }
+    .checklist-panel.open { transform: translateX(-50%) translateY(0); }
     .checklist-items {
       overflow-y: auto;
       padding: 15px;
-      /* Show roughly three items at a time */
-      max-height: 200px;
+      max-height: 200px; /* about 3 items visible */
     }
-    .checklist-items ul {
-      list-style: none;
-    }
+    .checklist-items ul { list-style: none; }
     .checklist-items li {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
       font-size: 18px;
-      background: rgba(50, 50, 50, 0.8);
+      background: var(--btn-bg);
       padding: 10px;
       border-radius: 6px;
     }
@@ -234,8 +303,8 @@
       margin-right: 10px;
       transform: scale(1.2);
     }
-
-    /* Review Panel (Confirm Stage) – checkboxes remain active */
+    
+    /* Review Panel (Confirm Stage) */
     .review-panel {
       position: fixed;
       top: 50%;
@@ -243,13 +312,12 @@
       transform: translate(-50%, -50%) scale(0.8);
       width: 90%;
       max-width: 400px;
-      background: rgba(0, 0, 0, 0.9);
-      color: #fff;
+      background: rgba(0,0,0,0.9);
       border-radius: 10px;
-      z-index: 40;
+      z-index: 60;
       padding: 20px;
       display: none;
-      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      transition: transform var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out;
       opacity: 0;
     }
     .review-panel.open {
@@ -271,7 +339,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 10px;
-      background: rgba(50, 50, 50, 0.8);
+      background: var(--btn-bg);
       padding: 10px;
       border-radius: 6px;
       font-size: 18px;
@@ -280,17 +348,17 @@
       margin-right: 10px;
       transform: scale(1.2);
     }
-
-    /* Reports Modal (My Info) */
+    
+    /* ========= Reports Modal ========= */
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.8);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 50;
+      z-index: 70;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s;
@@ -300,18 +368,27 @@
       pointer-events: auto;
     }
     .modal-content {
-      background: #222;
+      background: var(--secondary-bg);
       padding: 20px;
       border-radius: 8px;
       width: 90%;
       max-width: 500px;
       max-height: 80%;
       overflow-y: auto;
+      position: relative;
     }
-    .modal-content h2 {
-      margin-bottom: 10px;
+    /* Modal Header with Close Button at Top */
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .modal-header h2 {
+      margin: 0;
       color: #fff;
     }
+    
     .modal-content ul {
       list-style: none;
       padding: 0;
@@ -321,62 +398,164 @@
       border-bottom: 1px solid #444;
       color: #fff;
     }
+    
+    /* ========= Settings Modal ========= */
+    .settings-modal {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 80;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .settings-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .settings-content {
+      background: var(--secondary-bg);
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80%;
+      overflow-y: auto;
+      position: relative;
+    }
+    .settings-content h2 {
+      margin-bottom: 20px;
+      color: #fff;
+      text-align: center;
+    }
+    .settings-section {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .settings-section h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 5px;
+    }
+    .settings-section p {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: var(--light-gray);
+    }
+    .settings-section select,
+    .settings-section input[type="range"],
+    .settings-section textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: none;
+      font-size: 16px;
+    }
+    
+    /* ========= End of CSS ========= */
   </style>
 </head>
 <body>
-  <!-- Camera Background -->
-  <video id="video-background" autoplay playsinline></video>
-
-  <!-- Home Button (shown when checklist is active) -->
-  <button id="home-btn" class="button">🏠 Home</button>
-
-  <!-- Main UI Container (Search Interface) -->
-  <div class="container" id="main-ui">
-    <!-- Top Bar with Translucent Background -->
-    <div class="top-buttons">
+  <!-- ========= Home Page ========= -->
+  <div id="homepage" class="homepage">
+    <!-- Home Top Bar -->
+    <div class="home-topbar">
       <button id="my-info-btn" class="button">📄 My Info</button>
-      <button class="button">⚙️ Settings</button>
+      <button id="settings-btn" class="button">⚙️ Settings</button>
     </div>
-
-    <!-- Bottom Section: Search & Previously Used -->
-    <div class="bottom-content">
+    <!-- Home Main Content -->
+    <div class="home-content">
+      <h1>Pre-Flight Checklist</h1>
+      <p>Your personal pre-flight companion</p>
       <input type="text" id="search-box" class="search-box" placeholder="Search Planes" />
       <div id="search-results"></div>
       <button class="previously-used" id="prev-used-btn">Previously Used</button>
       <div id="prev-dropdown"></div>
     </div>
   </div>
-
-  <!-- Checklist Panel -->
-  <div class="checklist-panel" id="checklist-panel">
-    <div class="checklist-header">
-      <div class="header-left"><h2 id="plane-name">Plane Name</h2></div>
-      <div class="header-center"><span id="timer">00:00</span></div>
-      <div class="header-right"><button id="done-btn" class="button">Done</button></div>
+  
+  <!-- ========= Checklist Page ========= -->
+  <div id="checklist-page" class="checklist-page">
+    <!-- Video Background -->
+    <video id="video-background" autoplay playsinline></video>
+    <!-- Top Bar for Checklist Page -->
+    <div class="checklist-topbar">
+      <div class="topbar-left">
+        <button id="home-btn" class="button">🏠</button>
+        <h2 id="plane-name">Plane Name</h2>
+      </div>
+      <div class="topbar-center"><span id="timer">00:00</span></div>
+      <div class="topbar-right">
+        <button id="done-btn" class="button">Done</button>
+      </div>
     </div>
-    <div class="checklist-items">
-      <ul id="checklist"></ul>
+    <!-- Checklist Panel -->
+    <div class="checklist-panel" id="checklist-panel">
+      <div class="checklist-items">
+        <ul id="checklist"></ul>
+      </div>
+    </div>
+    <!-- Review Panel -->
+    <div class="review-panel" id="review-panel">
+      <h2 id="review-plane-name">Review Checklist</h2>
+      <ul id="review-checklist"></ul>
+      <div style="text-align: center; margin-top: 15px;">
+        <button id="back-btn" class="button" style="margin-right: 10px;">Back</button>
+        <button id="confirm-btn" class="button">Confirm</button>
+      </div>
     </div>
   </div>
-
-  <!-- Review Panel (Confirm Stage) -->
-  <div class="review-panel" id="review-panel">
-    <h2 id="review-plane-name">Review Checklist</h2>
-    <ul id="review-checklist"></ul>
-    <button id="confirm-btn" class="button">Confirm</button>
-  </div>
-
-  <!-- Reports Modal (My Info) -->
+  
+  <!-- ========= Reports Modal (My Info) ========= -->
   <div id="reports-modal" class="modal">
     <div class="modal-content">
-      <h2>Reports</h2>
+      <div class="modal-header">
+        <h2>Reports</h2>
+        <button id="close-reports" class="button" style="padding: 5px 10px;">Close</button>
+      </div>
       <ul id="reports-list"></ul>
-      <button id="close-reports" class="button">Close</button>
     </div>
   </div>
-
+  
+  <!-- ========= Settings Modal ========= -->
+  <div id="settings-modal" class="settings-modal">
+    <div class="settings-content">
+      <h2>Settings</h2>
+      <div class="settings-section">
+        <h3>Appearance & Display</h3>
+        <p>Select Theme:</p>
+        <select id="theme-select">
+          <option value="dark" selected>Dark Mode</option>
+          <option value="light">Light Mode</option>
+        </select>
+        <p>Adjust Font Size:</p>
+        <input type="range" id="font-size" min="12" max="24" value="16">
+      </div>
+      <div class="settings-section">
+        <h3>Data & Report Management</h3>
+        <button id="export-reports" class="button">Export Reports (PDF)</button>
+        <button id="clear-reports" class="button" style="margin-top:10px;">Clear Reports</button>
+      </div>
+      <div class="settings-section">
+        <h3>Feedback & Support</h3>
+        <p>Have feedback? Let us know:</p>
+        <textarea id="feedback" placeholder="Enter your feedback here..." style="width:100%;height:80px;"></textarea>
+        <button id="submit-feedback" class="button" style="margin-top:10px;">Submit Feedback</button>
+      </div>
+      <button id="close-settings" class="button" style="margin-top: 20px;">Close</button>
+    </div>
+  </div>
+  
   <script>
-    // ================= Global Variables =================
+    /**************** Global Variables ****************/
     let currentChecklist = [];
     let timerInterval = null;
     let startTime = null;
@@ -399,8 +578,8 @@
       "Boeing 747",
       "Airbus A380"
     ];
-
-    // =============== Timer Functions ===============
+    
+    /**************** Timer Functions ****************/
     function formatTime(seconds) {
       let mins = Math.floor(seconds / 60);
       let secs = seconds % 60;
@@ -418,35 +597,33 @@
       clearInterval(timerInterval);
       timerInterval = null;
     }
-
-    // ============== Search & Previously Used ==============
+    
+    /**************** Home Page Functions ****************/
     const searchBox = document.getElementById("search-box");
     const searchResults = document.getElementById("search-results");
     const prevUsedBtn = document.getElementById("prev-used-btn");
     const prevDropdown = document.getElementById("prev-dropdown");
     let lastSearchedPlanes = [];
-
-    searchBox.addEventListener("input", function () {
+    
+    searchBox.addEventListener("input", function() {
       const query = this.value.trim().toLowerCase();
       searchResults.innerHTML = "";
       if (query === "") return;
-      const filtered = availablePlanes.filter((plane) =>
-        plane.toLowerCase().includes(query)
-      );
-      filtered.forEach((plane) => {
+      const filtered = availablePlanes.filter(plane => plane.toLowerCase().includes(query));
+      filtered.forEach(plane => {
         const div = document.createElement("div");
         div.className = "result-item";
         div.textContent = plane;
         div.addEventListener("click", () => {
-          showChecklist(plane);
+          selectPlane(plane);
           searchBox.value = "";
           searchResults.innerHTML = "";
         });
         searchResults.appendChild(div);
       });
     });
-
-    prevUsedBtn.addEventListener("click", function () {
+    
+    prevUsedBtn.addEventListener("click", function() {
       if (prevDropdown.style.display === "block") {
         prevDropdown.style.display = "none";
       } else {
@@ -454,39 +631,44 @@
         prevDropdown.style.display = "block";
       }
     });
-
+    
     function updatePrevDropdown() {
       prevDropdown.innerHTML = "";
-      lastSearchedPlanes.slice().reverse().forEach((plane) => {
+      lastSearchedPlanes.slice().reverse().forEach(plane => {
         const div = document.createElement("div");
         div.className = "prev-item";
         div.textContent = plane;
         div.addEventListener("click", () => {
-          showChecklist(plane);
+          selectPlane(plane);
           prevDropdown.style.display = "none";
         });
         prevDropdown.appendChild(div);
       });
     }
-
-    // ============== Checklist Functions ==============
-    function showChecklist(plane) {
-      // Update "Previously Used" list
+    
+    // Transition from Home Page to Checklist Page
+    function selectPlane(plane) {
       if (!lastSearchedPlanes.includes(plane)) {
         lastSearchedPlanes.push(plane);
-        if (lastSearchedPlanes.length > 3) {
-          lastSearchedPlanes.shift();
-        }
+        if (lastSearchedPlanes.length > 3) lastSearchedPlanes.shift();
       } else {
-        lastSearchedPlanes = lastSearchedPlanes.filter((p) => p !== plane);
+        lastSearchedPlanes = lastSearchedPlanes.filter(p => p !== plane);
         lastSearchedPlanes.push(plane);
       }
-      // Set plane name and initialize checklist data
+      document.getElementById("homepage").style.display = "none";
+      document.getElementById("checklist-page").style.display = "block";
+      showChecklist(plane);
+    }
+    
+    /**************** Checklist Page Functions ****************/
+    function showChecklist(plane) {
       document.getElementById("plane-name").textContent = plane;
-      currentChecklist = genericChecklist.map((item, idx) => {
-        return { index: idx, text: item, checked: false, time: null };
-      });
-      // Populate checklist panel
+      currentChecklist = genericChecklist.map((item, idx) => ({
+        index: idx,
+        text: item,
+        checked: false,
+        time: null
+      }));
       const checklistUl = document.getElementById("checklist");
       checklistUl.innerHTML = "";
       currentChecklist.forEach((item, idx) => {
@@ -499,8 +681,8 @@
         li.appendChild(checkbox);
         li.appendChild(label);
         checklistUl.appendChild(li);
-        checkbox.addEventListener("change", function () {
-          let i = this.getAttribute("data-index");
+        checkbox.addEventListener("change", function() {
+          const i = this.getAttribute("data-index");
           currentChecklist[i].checked = this.checked;
           if (this.checked) {
             currentChecklist[i].time = elapsedTime;
@@ -509,29 +691,24 @@
           }
         });
       });
-      // Hide main UI, show home button and checklist panel, then start timer
-      document.getElementById("main-ui").style.display = "none";
-      document.getElementById("home-btn").style.display = "block";
       document.getElementById("checklist-panel").classList.add("open");
       elapsedTime = 0;
       document.getElementById("timer").textContent = "00:00";
       startTimer();
+      startCamera();
     }
-
-    document.getElementById("done-btn").addEventListener("click", function () {
-      // Transition to review panel (confirm stage)
+    
+    // When Done is clicked, transition to the review panel.
+    document.getElementById("done-btn").addEventListener("click", function() {
       renderReviewPanel();
       document.getElementById("checklist-panel").classList.remove("open");
       document.getElementById("review-panel").classList.add("open");
     });
-
+    
     function renderReviewPanel() {
       const reviewChecklistUl = document.getElementById("review-checklist");
       reviewChecklistUl.innerHTML = "";
-      // Sort so that unchecked items come first
-      let sortedChecklist = currentChecklist.slice().sort((a, b) => {
-        return (a.checked === b.checked) ? 0 : a.checked ? 1 : -1;
-      });
+      let sortedChecklist = currentChecklist.slice().sort((a, b) => (a.checked === b.checked) ? 0 : a.checked ? 1 : -1);
       sortedChecklist.forEach(item => {
         const li = document.createElement("li");
         const checkbox = document.createElement("input");
@@ -539,80 +716,83 @@
         checkbox.checked = item.checked;
         checkbox.setAttribute("data-index", item.index);
         const label = document.createElement("label");
-        label.textContent =
-          item.text + (item.checked && item.time !== null ? " (" + formatTime(item.time) + ")" : "");
+        label.textContent = item.text + (item.checked && item.time !== null ? " (" + formatTime(item.time) + ")" : "");
         li.appendChild(checkbox);
         li.appendChild(label);
         reviewChecklistUl.appendChild(li);
-        checkbox.addEventListener("change", function () {
-          let idx = this.getAttribute("data-index");
+        checkbox.addEventListener("change", function() {
+          const idx = this.getAttribute("data-index");
           currentChecklist[idx].checked = this.checked;
           if (this.checked) {
             currentChecklist[idx].time = elapsedTime;
           } else {
             currentChecklist[idx].time = null;
           }
-          renderReviewPanel(); // re-render to update sorting and times
+          renderReviewPanel();
         });
       });
       document.getElementById("review-plane-name").textContent =
         "Review Checklist for " + document.getElementById("plane-name").textContent;
     }
-
-    document.getElementById("confirm-btn").addEventListener("click", function () {
+    
+    // Confirm: Stop timer, generate report, and return to Home Page.
+    document.getElementById("confirm-btn").addEventListener("click", function() {
       stopTimer();
-      // Generate report with final checklist state
       let report = {
         plane: document.getElementById("plane-name").textContent,
         totalTime: formatTime(elapsedTime),
-        items: currentChecklist.map(item => {
-          return {
-            text: item.text,
-            checked: item.checked,
-            time: item.time !== null ? formatTime(item.time) : "Not checked"
-          };
-        }),
+        items: currentChecklist.map(item => ({
+          text: item.text,
+          checked: item.checked,
+          time: item.time !== null ? formatTime(item.time) : "Not checked"
+        })),
         date: new Date().toLocaleString()
       };
       reports.push(report);
-      // Hide review panel and return to home screen
       document.getElementById("review-panel").classList.remove("open");
-      document.getElementById("checklist-panel").classList.remove("open");
-      document.getElementById("main-ui").style.display = "flex";
-      document.getElementById("home-btn").style.display = "none";
-    });
-
-    // Home button (cancel checklist) returns to main screen
-    document.getElementById("home-btn").addEventListener("click", function () {
+      document.getElementById("checklist-page").style.display = "none";
+      document.getElementById("homepage").style.display = "block";
       stopTimer();
-      document.getElementById("checklist-panel").classList.remove("open");
-      document.getElementById("review-panel").classList.remove("open");
-      document.getElementById("main-ui").style.display = "flex";
-      document.getElementById("home-btn").style.display = "none";
+      elapsedTime = 0;
+      stopCamera();
     });
-
-    // ============== Reports Modal (My Info) ==============
-    document.getElementById("my-info-btn").addEventListener("click", function (e) {
+    
+    // Back button: Return from Review Panel to Checklist Panel.
+    document.getElementById("back-btn").addEventListener("click", function() {
+      document.getElementById("review-panel").classList.remove("open");
+      document.getElementById("checklist-panel").classList.add("open");
+    });
+    
+    // Home button (on Checklist Page): Return immediately to Home Page.
+    document.getElementById("home-btn").addEventListener("click", function() {
+      // Hide any open panels
+      document.getElementById("review-panel").classList.remove("open");
+      document.getElementById("checklist-panel").classList.remove("open");
+      // Switch to Home Page
+      document.getElementById("checklist-page").style.display = "none";
+      document.getElementById("homepage").style.display = "block";
+      stopTimer();
+      elapsedTime = 0;
+      stopCamera();
+    });
+    
+    /**************** Reports Modal (My Info) ****************/
+    document.getElementById("my-info-btn").addEventListener("click", function(e) {
       e.stopPropagation();
       populateReports();
       document.getElementById("reports-modal").classList.add("open");
     });
-    document.getElementById("close-reports").addEventListener("click", function () {
+    document.getElementById("close-reports").addEventListener("click", function() {
       document.getElementById("reports-modal").classList.remove("open");
     });
     function populateReports() {
       const reportsList = document.getElementById("reports-list");
       reportsList.innerHTML = "";
-      reports.forEach((report, idx) => {
+      reports.forEach(report => {
         const li = document.createElement("li");
         li.innerHTML =
-          "<strong>" +
-          report.plane +
-          "</strong> - " +
-          report.date +
-          " (Total Time: " +
-          report.totalTime +
-          ")";
+          "<strong>" + report.plane + "</strong> - " + report.date +
+          " (Total Time: " + report.totalTime + ")";
         const ul = document.createElement("ul");
         report.items.forEach(item => {
           const itemLi = document.createElement("li");
@@ -623,24 +803,63 @@
         reportsList.appendChild(li);
       });
     }
-
-    // Hide Previously Used dropdown if clicking outside
-    document.addEventListener("click", function (event) {
-      if (!prevUsedBtn.contains(event.target) && !prevDropdown.contains(event.target)) {
-        prevDropdown.style.display = "none";
+    
+    /**************** Settings Modal ****************/
+    document.getElementById("settings-btn").addEventListener("click", function(e) {
+      e.stopPropagation();
+      document.getElementById("settings-modal").classList.add("open");
+    });
+    document.getElementById("close-settings").addEventListener("click", function() {
+      document.getElementById("settings-modal").classList.remove("open");
+    });
+    document.getElementById("export-reports").addEventListener("click", function() {
+      alert("Reports exported (dummy function)!");
+    });
+    document.getElementById("clear-reports").addEventListener("click", function() {
+      reports = [];
+      alert("Reports cleared!");
+    });
+    document.getElementById("submit-feedback").addEventListener("click", function() {
+      const feedback = document.getElementById("feedback").value;
+      if (feedback.trim() === "") {
+        alert("Please enter your feedback.");
+      } else {
+        alert("Feedback submitted! Thank you.");
+        document.getElementById("feedback").value = "";
       }
     });
-
-    // ============== Start Camera ==============
+    
+    /**************** Appearance Settings ****************/
+    // Theme selection: Toggle the "light-theme" class on the body
+    document.getElementById("theme-select").addEventListener("change", function() {
+      if (this.value === "light") {
+        document.body.classList.add("light-theme");
+      } else {
+        document.body.classList.remove("light-theme");
+      }
+    });
+    
+    // Font size adjustment: Update the root font size
+    document.getElementById("font-size").addEventListener("input", function() {
+      document.documentElement.style.fontSize = this.value + "px";
+    });
+    
+    /**************** Camera Functions ****************/
+    let currentStream = null;
     async function startCamera() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        document.getElementById("video-background").srcObject = stream;
+        currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        document.getElementById("video-background").srcObject = currentStream;
       } catch (error) {
         console.error("Error accessing camera:", error);
       }
     }
-    startCamera();
+    function stopCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+    }
   </script>
 </body>
 </html>
